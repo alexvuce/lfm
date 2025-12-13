@@ -1,7 +1,10 @@
+from collections import defaultdict
 import numpy as np
 import pandas as pd
+from random import sample, randint
+from torch.utils.data import DataLoader, Dataset
 
-# data loading
+
 def load_data(csv_path: str):
     """
     Expects a CSV with _ columns: [_, _]
@@ -26,18 +29,53 @@ def load_data(csv_path: str):
 
     # Sort and return as numpy
     df.sort_values(by=df.columns.tolist(), inplace=True, kind='mergesort')
-    coords = df.values.astype(np.int64)
+    interactions = df.values.astype(np.int64)
 
-    return coords, num_m, num_n
+    return interactions, num_m, num_n
 
-# dataset
 
-# collate
+def build_dict(interactions):
+    D = defaultdict(set)
+    for u, v in interactions:
+        D[u].add(v)
+    
+    return D
 
-# collate
+class InteractionDataset(Dataset):
+    def __init__(self, interactions):
+        self.interactions = interactions
 
-# Dataloader
+    def __len__(self):
+        return len(self.interactions)
 
+    def __getitem__(self, idx):
+        return self.interactions[idx]
+
+
+def classification_collate_fn(batch, D, num_n):
+    
+    U_, A = zip(*batch)
+
+    U, S, y = [], [], []
+
+    for u, a in zip(U_, A):
+        U.append(u)
+        S.append(a)
+        y.append(1)
+
+        while True:
+            b_ = randint(0, num_n - 1)
+            if b_ not in D[u]:
+                U.append(u)
+                S.append(b_)
+                y.append(0)
+                break
+
+    return (
+        torch.tensor(U, dtype=torch.long),
+        torch.tensor(S, dtype=torch.long),
+        torch.tensor(y, dtype=torch.float),
+    )
 # safe binary auc
 
 # loss function
