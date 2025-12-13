@@ -1,7 +1,7 @@
 from collections import defaultdict
 import numpy as np
 import pandas as pd
-from random import sample, randint
+from random import randint
 from torch.utils.data import DataLoader, Dataset
 
 
@@ -40,6 +40,7 @@ def build_dict(interactions):
         D[u].add(v)
     
     return D
+
 
 class InteractionDataset(Dataset):
     def __init__(self, interactions):
