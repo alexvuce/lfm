@@ -2,4 +2,4 @@ matplotlib
 numpy
 pandas
 scikit-learn
-torch
+torch torchvision --index-url https://download.pytorch.org/whl/cu130

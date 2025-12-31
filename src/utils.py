@@ -53,7 +53,7 @@ def load_data(csv_path: str):
     us = sorted(df.iloc[:, 0].unique().tolist())
     vs = sorted(df.iloc[:, 1].unique().tolist())
     us2ix = {u: i for i, u in enumerate(us)}
-    vs2ix = {v: j for j, v in enumerate(us)}
+    vs2ix = {v: j for j, v in enumerate(vs)}
     num_m = len(us2ix); num_n = len(vs2ix)
     print(f'There are {num_m} m and {num_n} n')
 
